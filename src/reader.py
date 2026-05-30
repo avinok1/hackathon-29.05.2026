@@ -16,6 +16,7 @@ logging.basicConfig(
 class Email:
     subject: str = ''
     body: str = ''
+    path: Path = None
 
 class Reader:
     # Таблица синонимов
@@ -48,7 +49,7 @@ class Reader:
             logging.info(f'Формат файла "{file.name}": json')
             with file.open(encoding='utf-8') as f:
                 letter = json.load(f)
-            return Email(letter.get('subject', ''), letter.get('body', ''))
+            return Email(letter.get('subject', ''), letter.get('body', ''), file)
         logging.info(f'Формат файла "{file.name}": txt')
         information = {}
         with file.open(encoding='utf-8') as f:
@@ -60,7 +61,7 @@ class Reader:
                 key = self._translate_head(key)
                 if key:
                     information[key] = value.strip()
-        return Email(information.get('subject', ''), self._clean_body(body))
+        return Email(information.get('subject', ''), self._clean_body(body), file)
     
 
 
