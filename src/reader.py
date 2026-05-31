@@ -5,13 +5,6 @@ from pathlib import Path
 from dataclasses import dataclass
 import logging
 
-logging.basicConfig(
-    filename="logs.txt",
-    level=logging.INFO,
-    encoding="utf-8",
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
-
 @dataclass
 class Email:
     subject: str = ''
