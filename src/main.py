@@ -11,7 +11,6 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-
 reader = Reader()
 distributor = Distributor()
 emails, errors = reader.read_all_emails('inbox')
