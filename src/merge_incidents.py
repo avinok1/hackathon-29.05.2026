@@ -29,7 +29,7 @@ class Merger:
         p.bar(names, count)
         p.xlabel('Система')
         p.ylabel('Количество обращений')
-        p.title('Инцеденты по числу обращений')
+        p.title('Инциденты по числу обращений')
         p.xticks(rotation=45, ha='right')
         p.tight_layout()
         p.savefig(result)
