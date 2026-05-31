@@ -10,13 +10,12 @@ class Email:
     subject: str = ''
     body: str = ''
     path: Path = None
+    sender: str = ''
 
 class Reader:
     # Таблица синонимов
     synonyms = {
         'from': 'sender',      'от кого': 'sender',   'ot kogo': 'sender',
-        'to': 'recipient',     'кому': 'recipient',   'komu': 'recipient',
-        'date': 'date',        'дата': 'date',        'data': 'date',
         'subject': 'subject',  'тема': 'subject',     'tema': 'subject',
     }
 
@@ -42,8 +41,7 @@ class Reader:
             logging.info(f'Формат файла "{file.name}": json')
             with file.open(encoding='utf-8') as f:
                 letter = json.load(f)
-            return Email(letter.get('subject', ''), letter.get('body', ''), file)
-        logging.info(f'Формат файла "{file.name}": txt')
+            return Email(letter.get('subject', ''), letter.get('body', ''), file, letter.get('from', ''))
         information = {}
         with file.open(encoding='utf-8') as f:
             text = f.read()
@@ -54,7 +52,7 @@ class Reader:
                 key = self._translate_head(key)
                 if key:
                     information[key] = value.strip()
-        return Email(information.get('subject', ''), self._clean_body(body), file)
+        return Email(information.get('subject', ''), self._clean_body(body), file, information.get('sender', ''))
     
 
 

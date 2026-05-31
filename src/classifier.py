@@ -3,14 +3,6 @@
 from reader import Email
 import logging
 
-logging.basicConfig(
-    filename="logs.txt",
-    level=logging.INFO,
-    encoding="utf-8",
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
-
-
 class Classifier:
     # Таблица триггерных слов
     trigger_words = {
@@ -138,13 +130,13 @@ class Classifier:
         max_score = max(scores.values())
         winners = [category for category, score in scores.items() if score == max_score]
         if max_score == 0:
-            logging.info(f'Письмо "{email.path}" отнесено в "Неизвестное"')
+            logging.info(f'Письмо "{email.path.name}" отнесено в "Неизвестное"')
             return "Неизвестное", email.path
         elif len(winners) == 1:
-            logging.info(f'Письмо "{email.path}" отнесено в "{winners[0]}"')
+            logging.info(f'Письмо "{email.path.name}" отнесено в "{winners[0]}"')
             return winners[0], email.path
         else:
-            logging.info(f'Письмо "{email.path}" отнесено в "Смешанное"')
+            logging.info(f'Письмо "{email.path.name }" отнесено в "Смешанное"')
             return "Смешанная категория", email.path
 
     def _count_trigger_words(self, email: Email) -> dict:

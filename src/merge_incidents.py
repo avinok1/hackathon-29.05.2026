@@ -2,6 +2,7 @@
 from reader import Email, Reader
 from pathlib import Path
 from matplotlib import pyplot as p
+import logging
 
 class Merger:
     systems = ["система согласования","confluence","корпоративный портал","bi-система","облачное хранилище","slack","gitlab","service desk"]
@@ -33,6 +34,7 @@ class Merger:
         p.xticks(rotation=45, ha='right')
         p.tight_layout()
         p.savefig(result)
+        logging.info(f'График инцидентов сохранен в "{result}"')
 
     def write_info(self, incidents: list, result: Path) -> None:
         """Записываем информацию об инцидентах в файл"""
@@ -45,6 +47,7 @@ class Merger:
                 f.write(f'## {self.true_names.get(list(info["Система"])[0], list(info["Система"])[0])}\n')
                 f.write(f'- обращений: {info["Количество писем"]}\n')
                 f.write(f'- количество отправителей: {len(info["Отправители"])}\n\n')
+        logging.info(f'Информация об инцидентах записана в файл "{result}"')
 
     def info_one_incident(self, group: list) -> dict:
         """Собираем информацию об одном инциденте"""
@@ -73,6 +76,7 @@ class Merger:
                     break
             if not added:
                 incidents.append([email])
+        logging.info(f'Всего инцидентов: {len(incidents)}')
         return incidents
 
     def _similarity(self, email1: Email, email2: Email) -> float:
