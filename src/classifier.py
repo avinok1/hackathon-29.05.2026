@@ -3,13 +3,6 @@
 from reader import Email
 import logging
 
-logging.basicConfig(
-    filename="logs.txt",
-    level=logging.INFO,
-    encoding="utf-8",
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
-
 
 class Classifier:
     # Таблица триггерных слов
