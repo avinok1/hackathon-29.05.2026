@@ -5,7 +5,7 @@ from distributor import Distributor
 import logging
 logging.basicConfig(
     filename="logs.txt",
-    filemode="w"
+    filemode="w",
     level=logging.INFO,
     encoding="utf-8",
     format="%(asctime)s - %(levelname)s - %(message)s"
