@@ -19,7 +19,7 @@ class Reader:
         'subject': 'subject',  'тема': 'subject',     'tema': 'subject',
     }
 
-    def read_all_emails(self, inbox: Path) -> list:
+    def read_all_emails(self, inbox: Path) -> tuple:
         '''Читаем все письма из папки и возвращаем список писем и ошибок'''
         emails = []
         errors = []

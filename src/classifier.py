@@ -51,7 +51,6 @@ class Classifier:
     # Доступы
     "предоставить доступ": "Доступы",
     "запрос доступа": "Доступы",
-    "пропал доступ" : "Доступы",
     "выдать доступ": "Доступы",
     "логин": "Доступы",
     "не могу войти": "Доступы",
@@ -121,10 +120,10 @@ class Classifier:
     "warning": "Мониторинг",
     "healthcheck": "Мониторинг",
     "disk usage": "Мониторинг",
-    "отчёт мониторинга": "Мониторинг",
+    "отчет мониторинга": "Мониторинг",
 }
 
-    def classify(self, email: Email) -> str:
+    def classify(self, email: Email) -> tuple:
         """Классифицируем письмо и возвращаем категорию"""
         scores = self._count_trigger_words(email)
         max_score = max(scores.values())
@@ -136,7 +135,7 @@ class Classifier:
             logging.info(f'Письмо "{email.path.name}" отнесено в "{winners[0]}"')
             return winners[0], email.path
         else:
-            logging.info(f'Письмо "{email.path.name }" отнесено в "Смешанное"')
+            logging.info(f'Письмо "{email.path.name}" отнесено в "Смешанная категория"')
             return "Смешанная категория", email.path
 
     def _count_trigger_words(self, email: Email) -> dict:
@@ -153,8 +152,8 @@ class Classifier:
         "Новостная сводка": 0,
         "Мониторинг": 0,
         }
-        subject = email.subject.lower()
-        body = email.body.lower()
+        subject = email.subject.lower().replace('ё', 'е')
+        body = email.body.lower().replace('ё', 'е')
         for word, category in self.trigger_words.items():
             if word in subject:
                 scores[category] += 2

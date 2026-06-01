@@ -24,7 +24,7 @@ class Merger:
         count = []
         for incident in incidents:
             info = self.info_one_incident(incident)
-            names.append(self.true_names.get(list(info["Система"])[0], list(info["Система"])[0]))
+            names.append(info["Система"])
             count.append(info["Количество писем"])
         p.figure(figsize=(10, 5))
         p.bar(names, count)
@@ -32,6 +32,7 @@ class Merger:
         p.ylabel('Количество обращений')
         p.title('Инциденты по числу обращений')
         p.xticks(rotation=45, ha='right')
+        p.yticks(range(0, max(count) + 1))
         p.tight_layout()
         p.savefig(result)
         logging.info(f'График инцидентов сохранен в "{result}"')
@@ -44,7 +45,7 @@ class Merger:
             f.write(f'Всего инцидентов: {len(incidents)}\n\n')
             for incident in incidents:
                 info = self.info_one_incident(incident)
-                f.write(f'## {self.true_names.get(list(info["Система"])[0], list(info["Система"])[0])}\n')
+                f.write(f'## {info["Система"]}\n')
                 f.write(f'- обращений: {info["Количество писем"]}\n')
                 f.write(f'- количество отправителей: {len(info["Отправители"])}\n\n')
         logging.info(f'Информация об инцидентах записана в файл "{result}"')
@@ -52,21 +53,26 @@ class Merger:
     def info_one_incident(self, group: list) -> dict:
         """Собираем информацию об одном инциденте"""
         system = self._detect_systems(group[0])
+        name = sorted(system)[0] if system else None
+        truename = self.true_names.get(name, name) if system else "Неизвестная система"   
         senders = set(email.sender for email in group)
         count = len(group)
-        return {"Система": system, "Отправители": senders, "Количество писем": count}
+        return {"Система": truename, "Отправители": senders, "Количество писем": count}
         
     def read_all_incidents(self, folder: Path) -> list:
         """Читаем все письма из папки и возвращаем список объектов Email"""
         reader = Reader()
         emails = []
+        if not folder.exists():
+            logging.warning(f'Папка "{folder}" не найдена. Вероятно, инцидентов нет.')
+            return emails
         for file in folder.iterdir():
-            emails.append(reader.read_email(file))
+            emails.append(reader.read_email(file))  
         return emails
     
-    def group_incidents(self, emails: list, value: float = 0.3) -> list:
+    def group_incidents(self, emails: list, value: float = 0.5) -> list:
         """Группируем письма по инцидентам"""
-        incidents = []
+        incidents = []  
         for email in emails:
             added = False
             for incident in incidents:
