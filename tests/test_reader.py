@@ -38,3 +38,4 @@ def test_both_correct_and_incorrect_files(reader, tmp_path):
     assert emails[0].body == "как дела?"
     assert emails[0].sender == "test@example.com"
     assert len(errors) == 1
+
